@@ -1,0 +1,69 @@
+version: '2'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+    networks:
+      - mynetwork 
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - mynetwork
+
+  postgresdw:
+    build:
+      context: datawarehouse
+      dockerfile: Dockerfile
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: dwaccount
+      POSTGRES_PASSWORD: password
+    networks:
+      - mynetwork
+  postgresPreproTS:
+    build:
+      context: pgtimeseries
+      dockerfile: Dockerfile
+    ports:
+      - 5433:5433
+    environment:
+      POSTGRES_USER: dwaccount
+      POSTGRES_PASSWORD: password
+    networks:
+      - mynetwork
+
+  pgcsource:
+    build:
+      context: pgsource
+      dockerfile: Dockerfile
+    ports:
+        - 8083:8083
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: sde_group
+      CONFIG_STORAGE_TOPIC: sde_storage_topic
+      OFFSET_STORAGE_TOPIC: sde_offset_topic
+    networks:
+        - mynetwork
+
+networks:
+  mynetwork:
+    external:
+      name: mynetwork
+ 
