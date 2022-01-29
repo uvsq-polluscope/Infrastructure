@@ -6,7 +6,7 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - 22181:2181
+      - "22181:2181"
     networks:
       - mynetwork 
   kafka:
@@ -14,7 +14,9 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - 29092:29092
+      - "29092:29092"
+    volumes:
+      - kafkadata:/var/lib/kafka/data
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -27,21 +29,26 @@ services:
 
   postgresdw:
     build:
-      context: datawarehouse
+      context: ./datawarehouse
       dockerfile: Dockerfile
     ports:
-      - 5432:5432
+      - "5433:5432"
     environment:
       POSTGRES_USER: dwaccount
       POSTGRES_PASSWORD: password
+    volumes:
+      - pgdwdata:/var/lib/postgresql/data
     networks:
       - mynetwork
-  postgresPreproTS:
+
+  postgrespreprots:
     build:
-      context: pgtimeseries
+      context: ./pgtimeseries
       dockerfile: Dockerfile
     ports:
-      - 5433:5433
+      - "5434:5432"
+    volumes:
+      - pgtsdata:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: dwaccount
       POSTGRES_PASSWORD: password
@@ -50,10 +57,10 @@ services:
 
   pgcsource:
     build:
-      context: pgsource
+      context: ./pgsource
       dockerfile: Dockerfile
     ports:
-        - 8083:8083
+        - "8083:8083"
     environment:
       BOOTSTRAP_SERVERS: kafka:9092
       GROUP_ID: sde_group
@@ -61,6 +68,25 @@ services:
       OFFSET_STORAGE_TOPIC: sde_offset_topic
     networks:
         - mynetwork
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - "9000:8080"
+    restart: always
+    depends_on:
+      - kafka
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=localhost:22181
+    networks:
+      - mynetwork
+
+volumes:
+  pgdwdata:
+  pgtsdata:
+  kafkadata:
 
 networks:
   mynetwork:
