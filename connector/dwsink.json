@@ -1,0 +1,14 @@
+{
+  "name": "jdbc-sink",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+    "connection.url": "jdbc:postgresql://postgresdw:5433/test",
+    "connection.user": "dwaccount",
+    "connection.password": "password",
+    "table.whitelist": "test1",
+    "topics": "test1",
+    "pk.mode": "record_value",
+    "pk.fields": "id",
+    "insert.mode": "upsert"
+  }
+}

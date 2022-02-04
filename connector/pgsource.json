@@ -1,0 +1,12 @@
+{"name": "sde-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "tasks.max": "1",
+    "database.hostname": "192.168.33.123",
+    "database.port": "5432",
+    "database.user": "postgres",
+    "database.password": "postgres",
+    "database.dbname" : "polluscopev5-last-version-2020",
+    "schema.whitelist": "r1"
+  }
+}
