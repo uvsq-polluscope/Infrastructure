@@ -21,7 +21,6 @@ services:
     networks:
       - mynetwork
 
-
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     hostname: zookeeper
@@ -32,8 +31,8 @@ services:
       - "2181:2181"
     networks:
       - mynetwork
-    #volumes:
-    #  - zookeeperdata:/var/lib/zookeeper/data
+    volumes:
+      - zookeeperdata:/var/lib/zookeeper/data
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -79,6 +78,9 @@ services:
       SCHEMA_REGISTRY_SCHEMA_REGISTRY_INTER_INSTANCE_PROTOCOL: "http"
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: INFO
       SCHEMA_REGISTRY_KAFKASTORE_TOPIC: _schemas
+    links:
+      - "dw:postgresdw"
+      - "prepro:postgrespreprots"
 
   kafka-connect:
     image: confluentinc/cp-kafka-connect-base:latest
@@ -121,6 +123,9 @@ services:
           /etc/confluent/docker/run &
           #
           sleep infinity
+    links:
+      - "dw:postgresdw"
+      - "prepro:postgrespreprots"
 
   postgresdw:
     build:
@@ -133,31 +138,48 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - pgdwdata:/var/lib/postgresql/data
-
+    networks:
+      - mynetwork
 
   postgrespreprots:
-      build:
-        context: ./pgtimeseries
-        dockerfile: Dockerfile
-      ports:
-        - "5434:5432"
-      volumes:
-        - pgtsdata:/var/lib/postgresql/data
-      environment:
-        POSTGRES_USER: dwaccount
-        POSTGRES_PASSWORD: password
-      networks:
-        - mynetwork
+    build:
+      context: ./pgtimeseries
+      dockerfile: Dockerfile
+    ports:
+       - "5434:5432"
+    volumes:
+      - pgtsdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: dwaccount
+      POSTGRES_PASSWORD: password
+    networks:
+      - mynetwork
+
+ rawdata:
+  build:
+    context: ./pgrawdata
+    dockerfile: Dockerfile
+  ports:
+    - "5435:5432"
+  environment:
+    POSTGRES_USER: dwaccount
+    POSTGRES_PASSWORD: password
+  volumes:
+    - rawdata:/var/lib/postgresql/data
+  networks:
+    - mynetwork
+
 
 volumes:
   pgdwdata:
   pgtsdata:
   kafkadata:
   zookeeperdata:
-  message.json:
+  rawdata:
 
 networks:
   mynetwork:
+    driver: bridge
     external:
       name: mynetwork
  

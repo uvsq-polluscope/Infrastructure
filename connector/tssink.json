@@ -2,12 +2,20 @@
   "name": "jdbc-sink-2",
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
-    "connection.url": "jdbc:postgresql://localhost:5434/test",
+    "connection.url": "jdbc:postgresql://localhost:5434/test?user=dwaccount&password=password&verifyServerCertificate:false&useSSL:true&requireSSL:true",
     "connection.user": "dwaccount",
     "connection.password": "password",
-    "table.whitelist": "test2",
+    "key.converter" : "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter" : "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schema.registry.url": "http://localhost:8081",
+    "key.converter.schema.registry.url": "http://localhost:8081",
+    "auto.create" : "true",
+    "auto.evolve" : "true",
+    "value.converter.schemas.enable" : "false",
+    "key.converter.schemas.enable" : "false",
     "topics": "test2",
-    "pk.mode": "record_value",
+    "table.name.format": "test.test",
+    "pk.mode": "record_key",
     "pk.fields": "id",
     "insert.mode": "upsert"
   }
