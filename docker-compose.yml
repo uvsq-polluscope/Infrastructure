@@ -79,8 +79,9 @@ services:
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: INFO
       SCHEMA_REGISTRY_KAFKASTORE_TOPIC: _schemas
     links:
-      - "dw:postgresdw"
-      - "prepro:postgrespreprots"
+      - "postgresdw:postgresdw"
+      - "postgrespreprots:postgrespreprots"
+
 
   kafka-connect:
     image: confluentinc/cp-kafka-connect-base:latest
@@ -124,8 +125,8 @@ services:
           #
           sleep infinity
     links:
-      - "dw:postgresdw"
-      - "prepro:postgrespreprots"
+      - "postgresdw:postgresdw"
+      - "postgrespreprots:postgrespreprots"
 
   postgresdw:
     build:
@@ -155,19 +156,19 @@ services:
     networks:
       - mynetwork
 
- rawdata:
-  build:
-    context: ./pgrawdata
-    dockerfile: Dockerfile
-  ports:
-    - "5435:5432"
-  environment:
-    POSTGRES_USER: dwaccount
-    POSTGRES_PASSWORD: password
-  volumes:
-    - rawdata:/var/lib/postgresql/data
-  networks:
-    - mynetwork
+  rawdata:
+    build:
+      context: ./pgrawdata
+      dockerfile: Dockerfile
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_USER: dwaccount
+      POSTGRES_PASSWORD: password
+    volumes:
+      - rawdata:/var/lib/postgresql/data
+    networks:
+     - mynetwork
 
 
 volumes:
@@ -180,6 +181,4 @@ volumes:
 networks:
   mynetwork:
     driver: bridge
-    external:
-      name: mynetwork
  
