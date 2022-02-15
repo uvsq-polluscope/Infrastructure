@@ -141,6 +141,7 @@ services:
     environment:
       POSTGRES_USER: dwaccount
       POSTGRES_PASSWORD: password
+      POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - pgdwdata:/var/lib/postgresql/data
     networks:
@@ -157,6 +158,7 @@ services:
     environment:
       POSTGRES_USER: dwaccount
       POSTGRES_PASSWORD: password
+      POSTGRES_HOST_AUTH_METHOD: trust
     networks:
       - mynetwork
 
@@ -169,6 +171,7 @@ services:
     environment:
       POSTGRES_USER: dwaccount
       POSTGRES_PASSWORD: password
+      POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - rawdata:/var/lib/postgresql/data
     networks:
