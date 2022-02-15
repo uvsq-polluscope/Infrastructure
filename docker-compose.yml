@@ -66,6 +66,7 @@ services:
     depends_on:
       - zookeeper
       - kafka
+      - kafka-connect
     networks:
       - mynetwork
     environment:
@@ -89,7 +90,9 @@ services:
       - "8083:8083"
     depends_on:
       - kafka
-      - schemaregistry
+      - postgrespreprots
+      - postgresdw
+    #  - rawdata
     networks:
       - mynetwork
     environment:
@@ -118,6 +121,7 @@ services:
         - |
           echo "Installing Connector"
           confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest
+          confluent-hub install --no-prompt confluentinc/kafka-connect-avro-converter:latest
           confluent-hub install --no-prompt debezium/debezium-connector-postgresql:latest
           #
           echo "Launching Kafka Connect worker"
@@ -169,7 +173,6 @@ services:
       - rawdata:/var/lib/postgresql/data
     networks:
      - mynetwork
-
 
 volumes:
   pgdwdata:
