@@ -163,9 +163,7 @@ services:
       - mynetwork
 
   rawdata:
-    build:
-      context: ./pgrawdata
-      dockerfile: Dockerfile
+    image: postgis/postgis
     ports:
       - "5435:5432"
     environment:
