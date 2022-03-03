@@ -2,7 +2,7 @@
   "name": "jdbc-sink",
   "config": {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
-    "connection.url": "jdbc:postgresql://postgresdw:5432/test",
+    "connection.url": "jdbc:postgresql://postgresdw:5433/datawarehouse",
     "connection.user": "dwaccount",
     "connection.password": "password",
     "key.converter" : "org.apache.kafka.connect.storage.StringConverter",
@@ -11,8 +11,6 @@
     "key.converter.schema.registry.url": "http://schemaregistry:8081",
     "auto.create" : "true",
     "auto.evolve" : "true",
-    "value.converter.schemas.enable" : "false",
-    "key.converter.schemas.enable" : "false",
     "topics": "test1",
     "pk.mode": "record_value",
     "pk.fields": "id",

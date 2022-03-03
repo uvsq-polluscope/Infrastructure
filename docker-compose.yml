@@ -92,7 +92,6 @@ services:
       - kafka
       - postgrespreprots
       - postgresdw
-    #  - rawdata
     networks:
       - mynetwork
     environment:
@@ -122,7 +121,6 @@ services:
           echo "Installing Connector"
           confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest
           confluent-hub install --no-prompt confluentinc/kafka-connect-avro-converter:latest
-          confluent-hub install --no-prompt debezium/debezium-connector-postgresql:latest
           #
           echo "Launching Kafka Connect worker"
           /etc/confluent/docker/run &
@@ -147,21 +145,6 @@ services:
     networks:
       - mynetwork
 
-  postgrespreprots:
-    build:
-      context: ./pgtimeseries
-      dockerfile: Dockerfile
-    ports:
-       - "5434:5432"
-    volumes:
-      - pgtsdata:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: dwaccount
-      POSTGRES_PASSWORD: password
-      POSTGRES_HOST_AUTH_METHOD: trust
-    networks:
-      - mynetwork
-
   rawdata:
     image: postgis/postgis
     ports:
@@ -177,7 +160,6 @@ services:
 
 volumes:
   pgdwdata:
-  pgtsdata:
   kafkadata:
   zookeeperdata:
   rawdata:
