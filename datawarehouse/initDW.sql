@@ -1,7 +1,7 @@
 \pset pager 0
 
 \c postgres
-DROP DATABASE IF EXISTS test;
-SELECT 'CREATE DATABASE test'
-WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'test')\gexec
+DROP DATABASE IF EXISTS datawarehouse;
+SELECT 'CREATE DATABASE datawarehouse'
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'datawarehouse')\gexec
 
