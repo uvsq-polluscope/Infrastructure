@@ -44,8 +44,8 @@ services:
       - "9997:9997"
     networks:
       - mynetwork
-    #volumes:
-    #  - kafkadata:/var/lib/kafka/data
+    volumes:
+      - kafkadata:/var/lib/kafka/data
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
