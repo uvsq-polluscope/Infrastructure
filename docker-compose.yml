@@ -147,8 +147,8 @@ services:
     ports:
       - "5435:5432"
     environment:
-      POSTGRES_USER: dwaccount
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
       POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - rawdata:/var/lib/postgresql/data
