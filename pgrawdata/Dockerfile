@@ -1,6 +1,6 @@
-FROM postgres:latest
+FROM postgis/postgis
 USER postgres
-ADD VGP_campaign.pgsql /docker-entrypoint-initdb.d/
-ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["postgres"]
+CMD [ "postgres" ]
+
+
 

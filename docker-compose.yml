@@ -81,7 +81,6 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_TOPIC: _schemas
     links:
       - "postgresdw:postgresdw"
-      - "postgrespreprots:postgrespreprots"
 
 
   kafka-connect:
@@ -90,7 +89,6 @@ services:
       - "8083:8083"
     depends_on:
       - kafka
-      - postgrespreprots
       - postgresdw
     networks:
       - mynetwork
@@ -128,7 +126,6 @@ services:
           sleep infinity
     links:
       - "postgresdw:postgresdw"
-      - "postgrespreprots:postgrespreprots"
 
   postgresdw:
     build:
