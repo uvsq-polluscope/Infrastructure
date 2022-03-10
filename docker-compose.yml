@@ -155,19 +155,6 @@ services:
     networks:
      - mynetwork
 
-  dataloader:
-    build: 
-      context: ../microservices/dataloader/
-      dockerfile: Dockerfile
-    environment:
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-      - SCHEMA_REGISTRY_CLIENT=http://schemaregistry:8085
-      - DATABASE=postgresql://postgres:postgres@192.168.33.124:5435/postgres
-    volumes:
-      - ../microservices//dataloader:/code
-    networks:
-      - mynetwork
-
 volumes:
   pgdwdata:
   kafkadata:
@@ -177,5 +164,4 @@ volumes:
 networks:
   mynetwork:
     driver: bridge
-    name: infrastrucutre_mynetwork
  
