@@ -164,4 +164,5 @@ volumes:
 networks:
   mynetwork:
     driver: bridge
+    name: infrastrucutre_mynetwork
  
