@@ -12,6 +12,7 @@
     "topics": "classificationTopic",
     "pk.mode": "record_value",
     "pk.fields": "participant_virtual_id",
-    "insert.mode": "upsert"
+    "insert.mode": "upsert",
+    "batch.size": 20
   }
 }

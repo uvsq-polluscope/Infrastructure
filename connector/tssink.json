@@ -13,6 +13,7 @@
     "topics": "stopMoveDetectionTopic",
     "pk.mode": "record_key",
     "pk.fields": "participant_virtual_id",
-    "insert.mode": "upsert"
+    "insert.mode": "upsert",
+    "batch.size": 20
   }
 }
